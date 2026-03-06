@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"gradle wrapper --gradle-version 8.7 2>&1\",\"timeout\":30000,\"description\":\"Generate Gradle wrapper\"}",
+  "error": "Exit code 127\n(eval):1: command not found: gradle\n\n(eval):1: command not found: gradle",
+  "timestamp": "2026-03-06T02:26:42.434Z",
+  "retry_count": 1
+}

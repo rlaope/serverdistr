@@ -19,7 +19,7 @@ class Order(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var status: OrderStatus = OrderStatus.PAID,
+    var status: OrderStatus = OrderStatus.PENDING,
 
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
@@ -29,5 +29,9 @@ class Order(
 )
 
 enum class OrderStatus {
-    PAID, CANCELLED, REFUNDED
+    PENDING,    // 주문 생성, 재고 차감 대기
+    PAID,       // 재고 차감 완료
+    FAILED,     // 재고 차감 실패 (보상 완료)
+    CANCELLED,
+    REFUNDED,
 }

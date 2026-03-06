@@ -11,9 +11,10 @@ import com.khope.order.domain.OrderRepository
 import com.khope.order.domain.OrderStatus
 import com.khope.order.dto.OrderItemResponse
 import com.khope.order.dto.OrderResponse
-import com.khope.order.event.OrderCompletedEvent
-import com.khope.order.event.StockDecreaseEvent
+import com.khope.order.event.OrderCreatedEvent
+import com.khope.order.event.StockDecreaseItem
 import com.khope.order.validator.OrderValidator
+import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -27,6 +28,7 @@ class OrderService(
     private val orderValidator: OrderValidator,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @Transactional
     fun createOrderFromCart(userId: Long): OrderResponse {
@@ -38,7 +40,7 @@ class OrderService(
         val order = Order(
             userId = userId,
             totalPrice = cart.totalPrice,
-            status = OrderStatus.PAID,
+            status = OrderStatus.PENDING,
         )
 
         cart.items.forEach { item ->
@@ -55,16 +57,45 @@ class OrderService(
         }
 
         val saved = orderRepository.save(order)
+        log.info("Order created with PENDING status: orderId=${saved.id}")
 
+        // 트랜잭션 커밋 후 Kafka로 재고 차감 요청
         eventPublisher.publishEvent(
-            OrderCompletedEvent(
+            OrderCreatedEvent(
                 orderId = saved.id,
                 userId = userId,
-                items = cart.items.map { StockDecreaseEvent(it.productId, it.quantity) },
+                items = cart.items.map { StockDecreaseItem(it.productId, it.quantity) },
             )
         )
 
         return saved.toResponse()
+    }
+
+    @Transactional
+    fun completeOrder(orderId: Long) {
+        val order = orderRepository.findById(orderId)
+            .orElseThrow { NotFoundException(ErrorCode.ORDER_NOT_FOUND) }
+
+        if (order.status != OrderStatus.PENDING) return
+
+        order.status = OrderStatus.PAID
+        orderRepository.save(order)
+
+        // 장바구니 비우기
+        cartClient.clearCart(order.userId)
+        log.info("Order completed: orderId=$orderId")
+    }
+
+    @Transactional
+    fun failOrder(orderId: Long, reason: String) {
+        val order = orderRepository.findById(orderId)
+            .orElseThrow { NotFoundException(ErrorCode.ORDER_NOT_FOUND) }
+
+        if (order.status != OrderStatus.PENDING) return
+
+        order.status = OrderStatus.FAILED
+        orderRepository.save(order)
+        log.warn("Order failed: orderId=$orderId, reason=$reason")
     }
 
     fun findByUserId(userId: Long, pageable: Pageable): Page<OrderResponse> {

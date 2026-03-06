@@ -13,13 +13,38 @@ scrape_configs:
       - targets:
           - localhost
         labels:
-          __path__: /var/log/spring/*.log
+          job: spring-services
+          service: auth-service
+          __path__: /var/log/spring/auth-service.log
+      - targets:
+          - localhost
+        labels:
+          job: spring-services
+          service: user-service
+          __path__: /var/log/spring/user-service.log
+      - targets:
+          - localhost
+        labels:
+          job: spring-services
+          service: product-service
+          __path__: /var/log/spring/product-service.log
+      - targets:
+          - localhost
+        labels:
+          job: spring-services
+          service: order-service
+          __path__: /var/log/spring/order-service.log
+      - targets:
+          - localhost
+        labels:
+          job: spring-services
+          service: gateway-service
+          __path__: /var/log/spring/gateway-service.log
     pipeline_stages:
       - multiline:
           firstline: '^\d{4}-\d{2}-\d{2}'
           max_wait_time: 3s
       - regex:
-          expression: '^(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+[^\s]*)\s+(?P<level>\w+)\s+\d+\s+---\s+\[(?P<service>[^\]]+)\]\s+'
+          expression: '^(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+[^\s]*)\s+(?P<level>\w+)\s+'
       - labels:
           level:
-          service:

@@ -4,9 +4,9 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/tmp/spring-logs/gateway-service.log</file>
+        <file>${LOG_PATH:-logs}/gateway-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>/tmp/spring-logs/gateway-service.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH:-logs}/gateway-service.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
             <maxHistory>3</maxHistory>
         </rollingPolicy>
@@ -14,6 +14,8 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+
+    <logger name="org.springframework.boot.actuate" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>

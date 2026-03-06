@@ -1,0 +1,85 @@
+{
+  "__inputs": [
+    {"name": "DS_PROMETHEUS", "type": "datasource", "pluginId": "prometheus"}
+  ],
+  "title": "KHOPE - Service Metrics",
+  "tags": ["khope"],
+  "timezone": "browser",
+  "refresh": "10s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "HTTP Request Rate (per service)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "targets": [{"expr": "sum(rate(http_server_requests_seconds_count[1m])) by (application)", "legendFormat": "{{application}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 2,
+      "title": "HTTP Response Time P95 (ms)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "targets": [{"expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket[1m])) by (le, application)) * 1000", "legendFormat": "{{application}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 3,
+      "title": "HTTP Error Rate (4xx + 5xx)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "targets": [{"expr": "sum(rate(http_server_requests_seconds_count{status=~\"4..|5..\"}[1m])) by (application)", "legendFormat": "{{application}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 4,
+      "title": "JVM Memory Used (MB)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "targets": [{"expr": "jvm_memory_used_bytes{area=\"heap\"} / 1024 / 1024", "legendFormat": "{{application}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 5,
+      "title": "JVM Threads",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+      "targets": [{"expr": "jvm_threads_live_threads", "legendFormat": "{{application}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 6,
+      "title": "Process CPU Usage (%)",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+      "targets": [{"expr": "process_cpu_usage * 100", "legendFormat": "{{application}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 7,
+      "title": "Kafka Consumer Lag",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+      "targets": [{"expr": "kafka_consumer_fetch_manager_records_lag_max", "legendFormat": "{{application}} - {{topic}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 8,
+      "title": "Cache Hit Ratio",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+      "targets": [{"expr": "sum(rate(cache_gets_total{result=\"hit\"}[1m])) by (application, cache) / sum(rate(cache_gets_total[1m])) by (application, cache) * 100", "legendFormat": "{{application}} - {{cache}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+    },
+    {
+      "id": 9,
+      "title": "Service Health",
+      "type": "stat",
+      "gridPos": {"h": 4, "w": 24, "x": 0, "y": 32},
+      "targets": [{"expr": "up", "legendFormat": "{{job}}", "refId": "A"}],
+      "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+      "options": {"colorMode": "background", "graphMode": "none"},
+      "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}]}}
+    }
+  ]
+}

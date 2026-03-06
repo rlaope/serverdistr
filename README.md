@@ -14,6 +14,7 @@ Client → Gateway(8080) → Auth(8081) / User(8082) / Product(8083) / Order(808
 ### 1. 인프라 실행
 
 ```bash
+
 docker-compose up -d
 ```
 
@@ -28,8 +29,7 @@ docker-compose up -d
 ./gradlew :gateway:bootRun   # 8080
 ```
 
-### 3. 프론트엔드
-
+### 3. 프론
 ```bash
 open frontend/index.html
 ```

@@ -1,5 +1,7 @@
 package com.khope.order.event
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.khope.common.event.StockDecreaseRequest
 import com.khope.order.saga.OrderSagaManager
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
@@ -11,6 +13,7 @@ import org.springframework.transaction.event.TransactionalEventListener
 class OrderEventPublisher(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val sagaManager: OrderSagaManager,
+    private val objectMapper: ObjectMapper,
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -18,13 +21,16 @@ class OrderEventPublisher(
     fun onOrderCreated(event: OrderCreatedEvent) {
         log.info("Order committed, starting saga: orderId=${event.orderId}, items=${event.items.size}")
 
-        // Saga 상태 초기화 (Redis)
         sagaManager.initSaga(event.orderId, event.items.size)
 
-        // 각 아이템에 대해 재고 차감 요청
         event.items.forEach { item ->
-            val message = "${event.orderId}|${item.productId}|${item.quantity}"
-            kafkaTemplate.send("stock-decrease-request", item.productId.toString(), message)
+            val request = StockDecreaseRequest(
+                orderId = event.orderId,
+                productId = item.productId,
+                quantity = item.quantity,
+            )
+            val json = objectMapper.writeValueAsString(request)
+            kafkaTemplate.send("stock-decrease-request", item.productId.toString(), json)
         }
     }
 }

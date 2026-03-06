@@ -11,10 +11,11 @@ import java.time.LocalDateTime
 @Component
 class SagaTimeoutScheduler(
     private val orderRepository: OrderRepository,
+    private val sagaManager: OrderSagaManager,
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    // 5분 이상 PENDING인 주문을 FAILED 처리
+    // 5분 이상 PENDING인 주문을 FAILED 처리 + 보상 트랜잭션 실행
     @Scheduled(fixedDelay = 60_000) // 1분마다 체크
     @Transactional
     fun timeoutPendingOrders() {
@@ -22,9 +23,8 @@ class SagaTimeoutScheduler(
         val pendingOrders = orderRepository.findByStatusAndCreatedAtBefore(OrderStatus.PENDING, cutoff)
 
         pendingOrders.forEach { order ->
-            order.status = OrderStatus.FAILED
-            orderRepository.save(order)
             log.warn("Order timed out (saga incomplete): orderId=${order.id}, created=${order.createdAt}")
+            sagaManager.compensateOrder(order.id)
         }
 
         if (pendingOrders.isNotEmpty()) {

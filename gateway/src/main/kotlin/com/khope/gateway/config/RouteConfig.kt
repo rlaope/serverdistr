@@ -22,10 +22,20 @@ class RouteConfig(
                 .filters { f -> f.filter(jwtAuthFilter) }
                 .uri("http://localhost:8082")
         }
+        .route("cart-service") { r ->
+            r.path("/api/cart/**")
+                .filters { f -> f.filter(jwtAuthFilter) }
+                .uri("http://localhost:8083")
+        }
         .route("product-service") { r ->
             r.path("/api/products/**")
                 .filters { f -> f.filter(jwtAuthFilter) }
                 .uri("http://localhost:8083")
+        }
+        .route("order-service") { r ->
+            r.path("/api/orders/**")
+                .filters { f -> f.filter(jwtAuthFilter) }
+                .uri("http://localhost:8084")
         }
         .build()
 }

@@ -1,14 +1,17 @@
 package com.khope.product.service
 
+import com.khope.common.exception.ErrorCode
+import com.khope.common.exception.NotFoundException
 import com.khope.product.domain.Product
 import com.khope.product.domain.ProductRepository
 import com.khope.product.domain.ProductStatus
 import com.khope.product.dto.CreateProductRequest
 import com.khope.product.dto.ProductResponse
 import com.khope.product.dto.UpdateProductRequest
-import com.khope.product.event.ProductEventPublisher
+import com.khope.product.event.ProductEvent
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -19,7 +22,7 @@ import java.time.LocalDateTime
 @Service
 class ProductService(
     private val productRepository: ProductRepository,
-    private val eventPublisher: ProductEventPublisher,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
 
     fun findAll(pageable: Pageable): Page<ProductResponse> {
@@ -30,7 +33,7 @@ class ProductService(
     @Cacheable(cacheNames = ["products"], key = "#id")
     fun findById(id: Long): ProductResponse {
         val product = productRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("Product not found: $id")
+            ?: throw NotFoundException(ErrorCode.PRODUCT_NOT_FOUND, "Product not found: $id")
         return product.toResponse()
     }
 
@@ -44,7 +47,7 @@ class ProductService(
                 stock = request.stock,
             )
         )
-        eventPublisher.publishCreated(product.id, product.name)
+        eventPublisher.publishEvent(ProductEvent.Created(product.id, product.name))
         return product.toResponse()
     }
 
@@ -52,7 +55,7 @@ class ProductService(
     @Transactional
     fun update(id: Long, request: UpdateProductRequest): ProductResponse {
         val product = productRepository.findById(id)
-            .orElseThrow { IllegalArgumentException("Product not found: $id") }
+            .orElseThrow { NotFoundException(ErrorCode.PRODUCT_NOT_FOUND, "Product not found: $id") }
 
         product.name = request.name
         product.description = request.description
@@ -61,7 +64,7 @@ class ProductService(
         product.updatedAt = LocalDateTime.now()
 
         val saved = productRepository.save(product)
-        eventPublisher.publishUpdated(saved.id, saved.name)
+        eventPublisher.publishEvent(ProductEvent.Updated(saved.id, saved.name))
         return saved.toResponse()
     }
 
@@ -69,7 +72,7 @@ class ProductService(
     @Transactional
     fun delete(id: Long) {
         val product = productRepository.findById(id)
-            .orElseThrow { IllegalArgumentException("Product not found: $id") }
+            .orElseThrow { NotFoundException(ErrorCode.PRODUCT_NOT_FOUND, "Product not found: $id") }
         product.status = ProductStatus.INACTIVE
         productRepository.save(product)
     }

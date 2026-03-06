@@ -1,1 +1,3 @@
 com.khope.common.cache.TieredCacheAutoConfiguration
+com.khope.common.web.WebAutoConfiguration
+com.khope.common.exception.GlobalExceptionHandler

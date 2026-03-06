@@ -1,11 +1,11 @@
 server:
-  port: 8083
+  port: 8084
 
 spring:
   application:
-    name: product-service
+    name: order-service
   datasource:
-    url: jdbc:h2:mem:productdb
+    url: jdbc:h2:mem:orderdb
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -21,27 +21,20 @@ spring:
     redis:
       host: localhost
       port: 6379
-      lettuce:
-        pool:
-          max-active: 10
-          max-idle: 10
   kafka:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    consumer:
-      group-id: product-service
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+service:
+  product:
+    url: http://localhost:8083
 
 khope:
   cache:
     enabled: true
     caches:
-      products:
-        mode: tiered          # caffeine | redis | tiered
-        caffeine-max-size: 500
-        caffeine-ttl: 5m
-        redis-ttl: 30m
+      orders:
+        mode: redis
+        redis-ttl: 10m

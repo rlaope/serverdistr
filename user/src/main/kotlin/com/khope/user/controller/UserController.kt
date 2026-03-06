@@ -1,5 +1,7 @@
 package com.khope.user.controller
 
+import com.khope.common.web.UserId
+import com.khope.user.client.OrderPageResponse
 import com.khope.user.dto.UpdateUserRequest
 import com.khope.user.dto.UserResponse
 import com.khope.user.service.UserService
@@ -19,8 +21,17 @@ class UserController(
     }
 
     @GetMapping("/me")
-    fun getMe(@RequestHeader("X-User-Id") userId: Long): ResponseEntity<UserResponse> {
+    fun getMe(@UserId userId: Long): ResponseEntity<UserResponse> {
         return ResponseEntity.ok(userService.findById(userId))
+    }
+
+    @GetMapping("/me/orders")
+    fun getMyOrders(
+        @UserId userId: Long,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int,
+    ): ResponseEntity<OrderPageResponse> {
+        return ResponseEntity.ok(userService.getMyOrders(userId, page, size))
     }
 
     @PutMapping("/{id}")

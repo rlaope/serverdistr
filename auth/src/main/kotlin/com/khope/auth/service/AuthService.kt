@@ -4,6 +4,9 @@ import com.khope.auth.config.JwtProvider
 import com.khope.auth.domain.Account
 import com.khope.auth.domain.AccountRepository
 import com.khope.auth.dto.*
+import com.khope.common.exception.ErrorCode
+import com.khope.common.exception.NotFoundException
+import com.khope.common.exception.ValidationException
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +21,9 @@ class AuthService(
 
     @Transactional
     fun signup(request: SignupRequest): TokenResponse {
-        require(!accountRepository.existsByEmail(request.email)) { "Email already exists" }
+        if (accountRepository.existsByEmail(request.email)) {
+            throw ValidationException(ErrorCode.EMAIL_ALREADY_EXISTS)
+        }
 
         val account = accountRepository.save(
             Account(
@@ -32,25 +37,37 @@ class AuthService(
 
     fun login(request: LoginRequest): TokenResponse {
         val account = accountRepository.findByEmail(request.email)
-            ?: throw IllegalArgumentException("Invalid email or password")
+            ?: throw ValidationException(ErrorCode.INVALID_CREDENTIALS)
 
-        require(account.password == request.password) { "Invalid email or password" } // TODO: BCrypt 적용
+        if (account.password != request.password) { // TODO: BCrypt 적용
+            throw ValidationException(ErrorCode.INVALID_CREDENTIALS)
+        }
 
         return generateTokens(account)
     }
 
     fun refresh(request: RefreshRequest): TokenResponse {
-        val userId = jwtProvider.validateToken(request.refreshToken)
+        val userId = try {
+            jwtProvider.validateToken(request.refreshToken)
+        } catch (e: Exception) {
+            throw ValidationException(ErrorCode.INVALID_TOKEN)
+        }
+
         val account = accountRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("User not found") }
+            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
 
         return generateTokens(account)
     }
 
     fun validate(token: String): ValidateResponse {
-        val userId = jwtProvider.validateToken(token)
+        val userId = try {
+            jwtProvider.validateToken(token)
+        } catch (e: Exception) {
+            throw ValidationException(ErrorCode.INVALID_TOKEN)
+        }
+
         val account = accountRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("User not found") }
+            .orElseThrow { NotFoundException(ErrorCode.USER_NOT_FOUND) }
 
         return ValidateResponse(
             userId = account.id,

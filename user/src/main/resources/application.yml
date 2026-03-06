@@ -28,3 +28,13 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+khope:
+  cache:
+    enabled: true
+    caches:
+      users:
+        mode: tiered          # caffeine | redis | tiered
+        caffeine-max-size: 300
+        caffeine-ttl: 5m
+        redis-ttl: 15m

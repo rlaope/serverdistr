@@ -7,12 +7,10 @@ import com.khope.product.dto.CreateProductRequest
 import com.khope.product.dto.ProductResponse
 import com.khope.product.dto.UpdateProductRequest
 import com.khope.product.event.ProductEventPublisher
-import org.springframework.cache.CacheManager
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,12 +27,11 @@ class ProductService(
             .map { it.toResponse() }
     }
 
-    @Cacheable(cacheNames = ["products"], cacheManager = "tieredCacheManager", key = "#id")
+    @Cacheable(cacheNames = ["products"], key = "#id")
     fun findById(id: Long): ProductResponse {
         val product = productRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("Product not found: $id")
         return product.toResponse()
-
     }
 
     @Transactional
@@ -51,8 +48,8 @@ class ProductService(
         return product.toResponse()
     }
 
+    @CacheEvict(cacheNames = ["products"], key = "#id")
     @Transactional
-    @CacheEvict(cacheNames = ["products"], key = "#id", cacheManager = "tieredCacheManager")
     fun update(id: Long, request: UpdateProductRequest): ProductResponse {
         val product = productRepository.findById(id)
             .orElseThrow { IllegalArgumentException("Product not found: $id") }
@@ -65,14 +62,11 @@ class ProductService(
 
         val saved = productRepository.save(product)
         eventPublisher.publishUpdated(saved.id, saved.name)
-
-        val response = saved.toResponse()
-
-        return response
+        return saved.toResponse()
     }
 
+    @CacheEvict(cacheNames = ["products"], key = "#id")
     @Transactional
-    @CacheEvict(cacheNames = ["products"], key = "#id", cacheManager = "tieredCacheManager")
     fun delete(id: Long) {
         val product = productRepository.findById(id)
             .orElseThrow { IllegalArgumentException("Product not found: $id") }

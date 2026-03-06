@@ -1,3 +1,3 @@
 rootProject.name = "tp"
 
-include("gateway", "auth", "user", "product")
+include("common", "gateway", "auth", "user", "product")

@@ -30,3 +30,13 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+khope:
+  cache:
+    enabled: true
+    caches:
+      products:
+        mode: tiered          # caffeine | redis | tiered
+        caffeine-max-size: 500
+        caffeine-ttl: 5m
+        redis-ttl: 30m

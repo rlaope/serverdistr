@@ -21,6 +21,11 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
+    dependencies {
+        "implementation"("org.springframework.boot:spring-boot-starter-actuator")
+        "runtimeOnly"("io.micrometer:micrometer-registry-prometheus")
+    }
+
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")

@@ -38,7 +38,16 @@ khope:
     enabled: true
     caches:
       users:
-        mode: tiered          # caffeine | redis | tiered
+        mode: tiered
         caffeine-max-size: 300
         caffeine-ttl: 5m
         redis-ttl: 15m
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    tags:
+      application: user-service

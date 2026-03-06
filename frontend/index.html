@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KHOPE Shop</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f5f5f5; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; margin-bottom: 20px; }
+        nav { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        nav button { padding: 8px 16px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 4px; }
+        nav button.active { background: #333; color: #fff; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .card { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card h3 { margin-bottom: 8px; }
+        .card p { color: #666; font-size: 14px; }
+        .price { color: #e74c3c; font-weight: bold; font-size: 18px; }
+        .stock { color: #888; font-size: 13px; }
+        .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .btn-primary { background: #333; color: #fff; }
+        .btn-danger { background: #e74c3c; color: #fff; }
+        .btn-success { background: #27ae60; color: #fff; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; width: 100%; margin-bottom: 8px; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 14px; }
+        .auth-form { max-width: 400px; margin: 0 auto; }
+        .user-info { text-align: right; margin-bottom: 10px; font-size: 14px; }
+        .user-info span { font-weight: bold; }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 6px; color: #fff; z-index: 1000; display: none; }
+        .toast.success { background: #27ae60; }
+        .toast.error { background: #e74c3c; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; }
+        .cart-item .info { flex: 1; }
+        .cart-actions { display: flex; gap: 8px; align-items: center; }
+        .qty-input { width: 60px; text-align: center; margin-bottom: 0; }
+        .order-status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .status-PENDING { background: #f39c12; color: #fff; }
+        .status-PAID { background: #27ae60; color: #fff; }
+        .status-FAILED { background: #e74c3c; color: #fff; }
+        .empty { text-align: center; color: #999; padding: 40px; }
+        .product-actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+        .product-actions .qty-input { width: 60px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { font-size: 13px; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 KHOPE Shop</h1>
+
+        <div id="auth-area">
+            <div id="logged-out">
+                <nav>
+                    <button onclick="showAuth('login')" id="tab-login" class="active">로그인</button>
+                    <button onclick="showAuth('signup')" id="tab-signup">회원가입</button>
+                </nav>
+                <div id="login-form" class="auth-form section active">
+                    <div class="card">
+                        <div class="form-group">
+                            <label>이메일</label>
+                            <input type="email" id="login-email" value="khope@test.com">
+                        </div>
+                        <div class="form-group">
+                            <label>비밀번호</label>
+                            <input type="password" id="login-password" value="1234">
+                        </div>
+                        <button class="btn btn-primary" onclick="login()" style="width:100%">로그인</button>
+                    </div>
+                </div>
+                <div id="signup-form" class="auth-form section">
+                    <div class="card">
+                        <div class="form-group">
+                            <label>이메일</label>
+                            <input type="email" id="signup-email" placeholder="email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>비밀번호</label>
+                            <input type="password" id="signup-password" placeholder="4자 이상">
+                        </div>
+                        <button class="btn btn-primary" onclick="signup()" style="width:100%">회원가입</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="logged-in" style="display:none">
+                <div class="user-info">
+                    <span id="user-email"></span> 님 |
+                    <a href="#" onclick="logout()">로그아웃</a>
+                </div>
+                <nav>
+                    <button onclick="showSection('products')" id="tab-products" class="active">상품</button>
+                    <button onclick="showSection('cart')" id="tab-cart">장바구니</button>
+                    <button onclick="showSection('orders')" id="tab-orders">주문내역</button>
+                </nav>
+
+                <div id="products" class="section active"></div>
+                <div id="cart" class="section"></div>
+                <div id="orders" class="section"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const API = 'http://localhost:8080';
+        let token = localStorage.getItem('token');
+        let userEmail = localStorage.getItem('userEmail');
+
+        if (token) showLoggedIn();
+
+        function headers() {
+            return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+        }
+
+        function toast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 2500);
+        }
+
+        function showAuth(tab) {
+            document.getElementById('login-form').classList.toggle('active', tab === 'login');
+            document.getElementById('signup-form').classList.toggle('active', tab === 'signup');
+            document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+            document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+        }
+
+        function showSection(name) {
+            ['products', 'cart', 'orders'].forEach(s => {
+                document.getElementById(s).classList.toggle('active', s === name);
+                document.getElementById('tab-' + s).classList.toggle('active', s === name);
+            });
+            if (name === 'products') loadProducts();
+            if (name === 'cart') loadCart();
+            if (name === 'orders') loadOrders();
+        }
+
+        function showLoggedIn() {
+            document.getElementById('logged-out').style.display = 'none';
+            document.getElementById('logged-in').style.display = 'block';
+            document.getElementById('user-email').textContent = userEmail;
+            loadProducts();
+        }
+
+        function logout() {
+            token = null; userEmail = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('userEmail');
+            document.getElementById('logged-out').style.display = 'block';
+            document.getElementById('logged-in').style.display = 'none';
+        }
+
+        async function login() {
+            try {
+                const res = await fetch(API + '/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('login-email').value,
+                        password: document.getElementById('login-password').value,
+                    }),
+                });
+                if (!res.ok) throw new Error((await res.json()).message || '로그인 실패');
+                const data = await res.json();
+                token = data.accessToken;
+                userEmail = document.getElementById('login-email').value;
+                localStorage.setItem('token', token);
+                localStorage.setItem('userEmail', userEmail);
+                toast('로그인 성공');
+                showLoggedIn();
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function signup() {
+            try {
+                const res = await fetch(API + '/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('signup-email').value,
+                        password: document.getElementById('signup-password').value,
+                    }),
+                });
+                if (!res.ok) throw new Error((await res.json()).message || '회원가입 실패');
+                const data = await res.json();
+                token = data.accessToken;
+                userEmail = document.getElementById('signup-email').value;
+                localStorage.setItem('token', token);
+                localStorage.setItem('userEmail', userEmail);
+                toast('회원가입 성공');
+                showLoggedIn();
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function loadProducts() {
+            try {
+                const res = await fetch(API + '/api/products?size=50', { headers: headers() });
+                if (!res.ok) throw new Error('상품 로딩 실패');
+                const data = await res.json();
+                const el = document.getElementById('products');
+                if (!data.content || data.content.length === 0) {
+                    el.innerHTML = '<div class="empty">등록된 상품이 없습니다</div>';
+                    return;
+                }
+                el.innerHTML = data.content.map(p => `
+                    <div class="card">
+                        <h3>${p.name}</h3>
+                        <p>${p.description || ''}</p>
+                        <div style="margin-top:8px">
+                            <span class="price">₩${Number(p.price).toLocaleString()}</span>
+                            <span class="stock" style="margin-left:12px">재고: ${p.stock}개</span>
+                            <span class="stock" style="margin-left:8px">[${p.status}]</span>
+                        </div>
+                        <div class="product-actions">
+                            <input type="number" class="qty-input" id="qty-${p.id}" value="1" min="1" max="${p.stock}">
+                            <button class="btn btn-primary" onclick="addToCart(${p.id})" ${p.stock === 0 ? 'disabled' : ''}>
+                                장바구니 담기
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function addToCart(productId) {
+            try {
+                const qty = parseInt(document.getElementById('qty-' + productId).value) || 1;
+                const res = await fetch(API + '/api/cart/items', {
+                    method: 'POST',
+                    headers: headers(),
+                    body: JSON.stringify({ productId, quantity: qty }),
+                });
+                if (!res.ok) throw new Error('장바구니 담기 실패');
+                toast('장바구니에 담았습니다');
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function loadCart() {
+            try {
+                const res = await fetch(API + '/api/cart', { headers: headers() });
+                if (!res.ok) throw new Error('장바구니 로딩 실패');
+                const data = await res.json();
+                const el = document.getElementById('cart');
+                if (!data.items || data.items.length === 0) {
+                    el.innerHTML = '<div class="empty">장바구니가 비어있습니다</div>';
+                    return;
+                }
+                el.innerHTML = `
+                    ${data.items.map(item => `
+                        <div class="card cart-item">
+                            <div class="info">
+                                <h3>${item.productName}</h3>
+                                <span class="price">₩${Number(item.price).toLocaleString()}</span>
+                                <span class="stock" style="margin-left:8px">소계: ₩${Number(item.subtotal).toLocaleString()}</span>
+                            </div>
+                            <div class="cart-actions">
+                                <input type="number" class="qty-input" value="${item.quantity}" min="1"
+                                    onchange="updateCartItem(${item.productId}, this.value)">
+                                <button class="btn btn-danger" onclick="removeCartItem(${item.productId})">삭제</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <div class="card" style="text-align:right">
+                        <span style="font-size:18px">총액: </span>
+                        <span class="price" style="font-size:22px">₩${Number(data.totalPrice).toLocaleString()}</span>
+                        <button class="btn btn-success" onclick="placeOrder()" style="margin-left:16px;padding:10px 24px;font-size:16px">
+                            결제하기
+                        </button>
+                    </div>
+                `;
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function updateCartItem(productId, qty) {
+            try {
+                const res = await fetch(API + '/api/cart/items/' + productId, {
+                    method: 'PUT',
+                    headers: headers(),
+                    body: JSON.stringify({ quantity: parseInt(qty) }),
+                });
+                if (!res.ok) throw new Error('수량 변경 실패');
+                loadCart();
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function removeCartItem(productId) {
+            try {
+                const res = await fetch(API + '/api/cart/items/' + productId, {
+                    method: 'DELETE',
+                    headers: headers(),
+                });
+                if (!res.ok) throw new Error('삭제 실패');
+                toast('삭제됨');
+                loadCart();
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function placeOrder() {
+            try {
+                const res = await fetch(API + '/api/orders', {
+                    method: 'POST',
+                    headers: headers(),
+                });
+                if (!res.ok) throw new Error((await res.json()).message || '주문 실패');
+                const order = await res.json();
+                toast(`주문 완료! (주문번호: ${order.id}, 상태: ${order.status})`);
+                showSection('orders');
+            } catch (e) { toast(e.message, 'error'); }
+        }
+
+        async function loadOrders() {
+            try {
+                const res = await fetch(API + '/api/orders?size=50', { headers: headers() });
+                if (!res.ok) throw new Error('주문 로딩 실패');
+                const data = await res.json();
+                const el = document.getElementById('orders');
+                if (!data.content || data.content.length === 0) {
+                    el.innerHTML = '<div class="empty">주문 내역이 없습니다</div>';
+                    return;
+                }
+                el.innerHTML = data.content.map(o => `
+                    <div class="card">
+                        <div style="display:flex;justify-content:space-between;align-items:center">
+                            <h3>주문 #${o.id}</h3>
+                            <span class="order-status status-${o.status}">${o.status}</span>
+                        </div>
+                        <p style="margin:8px 0;color:#888">${o.createdAt}</p>
+                        <table>
+                            <thead><tr><th>상품</th><th>가격</th><th>수량</th><th>소계</th></tr></thead>
+                            <tbody>
+                                ${o.items.map(i => `
+                                    <tr>
+                                        <td>${i.productName}</td>
+                                        <td>₩${Number(i.price).toLocaleString()}</td>
+                                        <td>${i.quantity}</td>
+                                        <td>₩${Number(i.subtotal).toLocaleString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <div style="text-align:right;margin-top:8px">
+                            <span class="price">총 ₩${Number(o.totalPrice).toLocaleString()}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { toast(e.message, 'error'); }
+        }
+    </script>
+</body>
+</html>

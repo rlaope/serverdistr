@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+      - com.khope.common.cache.TieredCacheAutoConfiguration
+      - com.khope.common.kafka.KafkaErrorAutoConfiguration
+      - com.khope.common.kafka.KafkaJsonConfig
+
+khope:
+  cache:
+    enabled: false

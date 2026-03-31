@@ -17,4 +17,6 @@ interface PaymentRepository : JpaRepository<Payment, Long> {
         AND p.canceledDate IS NULL
     """)
     fun findByPaidDateAndIsComplete(@Param("paidDate") paidDate: LocalDate, pageable: Pageable): Slice<Payment>
+
+    fun findByOrderId(orderId: String): Payment?
 }

@@ -1,6 +1,13 @@
 package com.khope.payment.repository
 
-import com.khope.payment.domain.*
+import com.khope.payment.domain.merchant.Merchant
+import com.khope.payment.domain.merchant.MerchantRepository
+import com.khope.payment.domain.merchant.MerchantStatus
+import com.khope.payment.domain.payment.Payment
+import com.khope.payment.domain.payment.PaymentRepository
+import com.khope.payment.domain.payment.PaymentStatus
+import com.khope.payment.domain.settlement.Settlement
+import com.khope.payment.domain.settlement.SettlementRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -11,7 +18,6 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.domain.PageRequest
-import org.springframework.test.context.ActiveProfiles
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime

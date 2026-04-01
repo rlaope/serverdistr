@@ -1,5 +1,6 @@
-package com.khope.payment.domain
+package com.khope.payment.domain.settlement
 
+import com.khope.payment.domain.merchant.Merchant
 import io.lettuce.core.dynamic.annotation.Param
 import jakarta.persistence.LockModeType
 import org.springframework.data.jpa.repository.JpaRepository

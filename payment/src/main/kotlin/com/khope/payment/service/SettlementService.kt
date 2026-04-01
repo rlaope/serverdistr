@@ -2,11 +2,11 @@ package com.khope.payment.service
 
 import com.khope.payment.controller.SettlementController.SettlementResponse
 import com.khope.payment.data.SettlementData
-import com.khope.payment.domain.MerchantRepository
-import com.khope.payment.domain.PaymentRepository
-import com.khope.payment.domain.Settlement
-import com.khope.payment.domain.SettlementRepository
-import com.khope.payment.domain.SettlementStatus
+import com.khope.payment.domain.merchant.MerchantRepository
+import com.khope.payment.domain.payment.PaymentRepository
+import com.khope.payment.domain.settlement.Settlement
+import com.khope.payment.domain.settlement.SettlementRepository
+import com.khope.payment.domain.settlement.SettlementStatus
 import com.khope.payment.exception.GlobalHttpException
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest

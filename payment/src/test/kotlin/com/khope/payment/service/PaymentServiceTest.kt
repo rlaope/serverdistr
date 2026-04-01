@@ -5,7 +5,16 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.khope.payment.controller.PaymentController.ApproveRequest
 import com.khope.payment.controller.PaymentController.ApproveResponse
-import com.khope.payment.domain.*
+import com.khope.payment.domain.merchant.Merchant
+import com.khope.payment.domain.merchant.MerchantStatus
+import com.khope.payment.domain.payment.Action
+import com.khope.payment.domain.payment.Payment
+import com.khope.payment.domain.payment.PaymentApproval
+import com.khope.payment.domain.payment.PaymentApprovalLog
+import com.khope.payment.domain.payment.PaymentApprovalLogRepository
+import com.khope.payment.domain.payment.PaymentApprovalRepository
+import com.khope.payment.domain.payment.PaymentRepository
+import com.khope.payment.domain.payment.PaymentStatus
 import com.khope.payment.exception.GlobalHttpException
 import com.khope.payment.util.IdempotentManager
 import org.assertj.core.api.Assertions.assertThat

@@ -15,4 +15,6 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
+    testImplementation("com.github.codemonstur:embedded-redis:1.4.3")
+    testImplementation("org.springframework.retry:spring-retry")
 }

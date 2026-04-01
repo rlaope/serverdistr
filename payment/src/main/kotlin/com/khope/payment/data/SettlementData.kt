@@ -1,7 +1,7 @@
 package com.khope.payment.data
 
-import com.khope.payment.domain.Settlement
-import com.khope.payment.domain.SettlementStatus
+import com.khope.payment.domain.settlement.Settlement
+import com.khope.payment.domain.settlement.SettlementStatus
 import java.math.BigDecimal
 import java.time.LocalDate
 

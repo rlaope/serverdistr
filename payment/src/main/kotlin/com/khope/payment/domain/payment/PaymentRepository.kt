@@ -1,4 +1,4 @@
-package com.khope.payment.domain
+package com.khope.payment.domain.payment
 
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
@@ -13,7 +13,7 @@ interface PaymentRepository : JpaRepository<Payment, Long> {
         SELECT p FROM Payment p
         JOIN FETCH p.merchant
         WHERE p.paidDate = :paidDate
-        AND p.status = com.khope.payment.domain.PaymentStatus.COMPLETED
+        AND p.status = com.khope.payment.domain.payment.PaymentStatus.COMPLETED
         AND p.canceledDate IS NULL
     """)
     fun findByPaidDateAndIsComplete(@Param("paidDate") paidDate: LocalDate, pageable: Pageable): Slice<Payment>

@@ -1,5 +1,6 @@
-package com.khope.payment.domain
+package com.khope.payment.domain.payment
 
+import com.khope.payment.domain.merchant.Merchant
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType

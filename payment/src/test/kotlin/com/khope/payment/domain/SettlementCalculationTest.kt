@@ -1,5 +1,11 @@
 package com.khope.payment.domain
 
+import com.khope.payment.domain.merchant.Merchant
+import com.khope.payment.domain.merchant.MerchantStatus
+import com.khope.payment.domain.payment.Payment
+import com.khope.payment.domain.payment.PaymentStatus
+import com.khope.payment.domain.settlement.Settlement
+import com.khope.payment.domain.settlement.SettlementStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

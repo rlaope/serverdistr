@@ -1,6 +1,13 @@
 package com.khope.payment.service
 
-import com.khope.payment.domain.*
+import com.khope.payment.domain.merchant.Merchant
+import com.khope.payment.domain.merchant.MerchantRepository
+import com.khope.payment.domain.merchant.MerchantStatus
+import com.khope.payment.domain.payment.Payment
+import com.khope.payment.domain.payment.PaymentRepository
+import com.khope.payment.domain.payment.PaymentStatus
+import com.khope.payment.domain.settlement.Settlement
+import com.khope.payment.domain.settlement.SettlementRepository
 import com.khope.payment.exception.GlobalHttpException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy

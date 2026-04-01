@@ -1,6 +1,6 @@
 package com.khope.payment.controller
 
-import com.khope.payment.domain.PaymentStatus
+import com.khope.payment.domain.payment.PaymentStatus
 import com.khope.payment.service.PaymentService
 import com.khope.payment.util.Idempotent
 import org.springframework.http.ResponseEntity

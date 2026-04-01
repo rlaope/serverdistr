@@ -1,0 +1,478 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774966733310,
+  "projectRoot": "/Users/rlaope/Desktop/khope/serverdistr",
+  "techStack": {
+    "languages": [
+      {
+        "name": "Kotlin",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "build.gradle.kts"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "gradle",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "auth": {
+      "path": "auth",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733306,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    },
+    "common": {
+      "path": "common",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733306,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    },
+    "frontend": {
+      "path": "frontend",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733306,
+      "keyFiles": [
+        "index.html"
+      ]
+    },
+    "gateway": {
+      "path": "gateway",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733307,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    },
+    "gradle": {
+      "path": "gradle",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774966733307,
+      "keyFiles": []
+    },
+    "monitoring": {
+      "path": "monitoring",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1774966733307,
+      "keyFiles": [
+        "loki-config.yml",
+        "prometheus.yml",
+        "promtail-config.yml"
+      ]
+    },
+    "order": {
+      "path": "order",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733307,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    },
+    "payment": {
+      "path": "payment",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733308,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    },
+    "product": {
+      "path": "product",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733308,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    },
+    "question": {
+      "path": "question",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1774966733308,
+      "keyFiles": [
+        "02_settlement_batch.md",
+        "02_settlement_batch_review.md",
+        "03_idempotent_payment.md",
+        "04_transfer_concurrency.md",
+        "05_partial_refund.md"
+      ]
+    },
+    "user": {
+      "path": "user",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774966733308,
+      "keyFiles": [
+        "build.gradle.kts"
+      ]
+    },
+    "auth/src": {
+      "path": "auth/src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1774966733309,
+      "keyFiles": []
+    },
+    "common/build": {
+      "path": "common/build",
+      "purpose": "Build output",
+      "fileCount": 0,
+      "lastAccessed": 1774966733309,
+      "keyFiles": []
+    },
+    "common/src": {
+      "path": "common/src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1774966733310,
+      "keyFiles": []
+    },
+    "gateway/src": {
+      "path": "gateway/src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1774966733310,
+      "keyFiles": []
+    },
+    "order/src": {
+      "path": "order/src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1774966733310,
+      "keyFiles": []
+    },
+    "payment/build": {
+      "path": "payment/build",
+      "purpose": "Build output",
+      "fileCount": 0,
+      "lastAccessed": 1774966733310,
+      "keyFiles": []
+    },
+    "payment/src": {
+      "path": "payment/src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1774966733310,
+      "keyFiles": []
+    },
+    "product/src": {
+      "path": "product/src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1774966733310,
+      "keyFiles": []
+    },
+    "user/src": {
+      "path": "user/src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1774966733310,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "payment/src/test/kotlin/com/khope/payment/service/TransferServiceTest.kt",
+      "accessCount": 27,
+      "lastAccessed": 1775026660708,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/service/TransferService.kt",
+      "accessCount": 21,
+      "lastAccessed": 1775026466262,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/transfer/TransferCache.kt",
+      "accessCount": 15,
+      "lastAccessed": 1775024347838,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/test/kotlin/com/khope/payment/integration/TransferConcurrencyTest.kt",
+      "accessCount": 12,
+      "lastAccessed": 1775026056095,
+      "type": "file"
+    },
+    {
+      "path": "question/03_idempotent_payment.md",
+      "accessCount": 6,
+      "lastAccessed": 1775024786669,
+      "type": "file"
+    },
+    {
+      "path": "question/04_transfer_concurrency.md",
+      "accessCount": 6,
+      "lastAccessed": 1775024787132,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/controller/PaymentController.kt",
+      "accessCount": 5,
+      "lastAccessed": 1774971847513,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/account/Account.kt",
+      "accessCount": 5,
+      "lastAccessed": 1775023725519,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/PaymentApproval.kt",
+      "accessCount": 4,
+      "lastAccessed": 1774972044805,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/service/PaymentService.kt",
+      "accessCount": 4,
+      "lastAccessed": 1775023565698,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/transfer/TransferHistoryRepository.kt",
+      "accessCount": 4,
+      "lastAccessed": 1775023711656,
+      "type": "file"
+    },
+    {
+      "path": "question/05_partial_refund.md",
+      "accessCount": 4,
+      "lastAccessed": 1775024787721,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/test/resources/application-integration.yml",
+      "accessCount": 4,
+      "lastAccessed": 1775026042505,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/util/Idempotent.kt",
+      "accessCount": 3,
+      "lastAccessed": 1774971783340,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/test/kotlin/com/khope/payment/service/PaymentServiceTest.kt",
+      "accessCount": 3,
+      "lastAccessed": 1774971916717,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/util/IdempotentManager.kt",
+      "accessCount": 3,
+      "lastAccessed": 1775023564737,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/transfer/TransferHistory.kt",
+      "accessCount": 3,
+      "lastAccessed": 1775023610167,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/controller/TransferController.kt",
+      "accessCount": 3,
+      "lastAccessed": 1775024678565,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/account/AccountRepository.kt",
+      "accessCount": 3,
+      "lastAccessed": 1775026126303,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/util/IdempotentAop.kt",
+      "accessCount": 2,
+      "lastAccessed": 1774971481833,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/test/kotlin/com/khope/payment/util/IdempotentAopTest.kt",
+      "accessCount": 2,
+      "lastAccessed": 1774971789998,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/test/resources/application.yml",
+      "accessCount": 2,
+      "lastAccessed": 1775025522786,
+      "type": "file"
+    },
+    {
+      "path": "order/src/main/resources/application.yml",
+      "accessCount": 1,
+      "lastAccessed": 1774966764927,
+      "type": "file"
+    },
+    {
+      "path": "product/src/main/resources/application.yml",
+      "accessCount": 1,
+      "lastAccessed": 1774966774252,
+      "type": "file"
+    },
+    {
+      "path": "user/src/main/resources/application.yml",
+      "accessCount": 1,
+      "lastAccessed": 1774966774711,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/resources/application.yml",
+      "accessCount": 1,
+      "lastAccessed": 1774966775111,
+      "type": "file"
+    },
+    {
+      "path": "auth/src/main/resources/application.yml",
+      "accessCount": 1,
+      "lastAccessed": 1774966775632,
+      "type": "file"
+    },
+    {
+      "path": "common/src/main/kotlin/com/khope/common/cache/TieredCacheAutoConfiguration.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774966919424,
+      "type": "file"
+    },
+    {
+      "path": "auth/src/main/kotlin/com/khope/auth/service/AuthService.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774966920041,
+      "type": "file"
+    },
+    {
+      "path": "product/src/main/kotlin/com/khope/product/cart/service/CartService.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774966920576,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/Payment.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774966967500,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/service/SettlementService.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774966968194,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/util/IdempotencyFilter.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774969503808,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/PaymentApprovalRepository.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774969506120,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/PaymentApprovalLog.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774971464402,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/domain/PaymentApprovalLogRepository.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774971464934,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/exception/GlobalHttpException.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774971465556,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/main/kotlin/com/khope/payment/exception/GlobalExceptionHandler.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774971466233,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/test/kotlin/com/khope/payment/repository/PaymentRepositoryTest.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774971691947,
+      "type": "file"
+    },
+    {
+      "path": "payment/src/test/kotlin/com/khope/payment/service/SettlementServiceTest.kt",
+      "accessCount": 1,
+      "lastAccessed": 1774971692275,
+      "type": "file"
+    },
+    {
+      "path": "question/02_settlement_batch.md",
+      "accessCount": 1,
+      "lastAccessed": 1775024702246,
+      "type": "file"
+    },
+    {
+      "path": "question/06_coupon_concurrency.md",
+      "accessCount": 1,
+      "lastAccessed": 1775024818297,
+      "type": "file"
+    },
+    {
+      "path": "question/07_scheduled_payment.md",
+      "accessCount": 1,
+      "lastAccessed": 1775024883689,
+      "type": "file"
+    },
+    {
+      "path": "question/08_rate_limiter.md",
+      "accessCount": 1,
+      "lastAccessed": 1775024951890,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

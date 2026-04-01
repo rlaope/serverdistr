@@ -1,4 +1,4 @@
-package com.khope.payment.domain
+package com.khope.payment.domain.payment
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
